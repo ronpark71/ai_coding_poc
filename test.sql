@@ -1,5 +1,3 @@
-Here is the corrected SQL script with the updated txn_type_id values and proper labeling as per your logic:
-
 ```sql
 SELECT 
     t.transaction_date,
@@ -20,14 +18,38 @@ SELECT
 
     -- Interest
     SUM(CASE WHEN t.txn_type_id = 40011 THEN t.amount ELSE 0 END) AS interest_amount,
-    COUNT(CASE WHEN t.txn_type_id = 40011 THEN 1 END) AS interest_count
+    COUNT(CASE WHEN t.txn_type_id = 40011 THEN 1 END) AS interest_count,
+
+    -- Test1 (txn_type_id = 50011)
+    SUM(CASE WHEN t.txn_type_id = 50011 THEN t.amount ELSE 0 END) AS Test1_amount,
+    COUNT(CASE WHEN t.txn_type_id = 50011 THEN 1 END) AS Test1_count,
+
+    -- Test2 (txn_type_id = 60011)
+    SUM(CASE WHEN t.txn_type_id = 60011 THEN t.amount ELSE 0 END) AS Test2_amount,
+    COUNT(CASE WHEN t.txn_type_id = 60011 THEN 1 END) AS Test2_count,
+
+    -- Test3 (txn_type_id = 70011)
+    SUM(CASE WHEN t.txn_type_id = 70011 THEN t.amount ELSE 0 END) AS Test3_amount,
+    COUNT(CASE WHEN t.txn_type_id = 70011 THEN 1 END) AS Test3_count,
+
+    -- Test4 (txn_type_id = 80011)
+    SUM(CASE WHEN t.txn_type_id = 80011 THEN t.amount ELSE 0 END) AS Test4_amount,
+    COUNT(CASE WHEN t.txn_type_id = 80011 THEN 1 END) AS Test4_count,
+
+    -- Optionally, include columns from dim_payment_identifier if needed
+    dpi.*
 
 FROM 
     fct_transactions t
 JOIN 
     dim_account a ON t.account_id = a.account_id
+LEFT JOIN
+    dim_payment_identifier dpi ON t.pymt_id = dpi.pymt_id
 GROUP BY 
-    t.transaction_date;
+    t.transaction_date, dpi.<all_non_aggregated_columns>;
 ```
 
-This modification updates txn_type_id filters from 1001/2001/3001/4001 to 10011/20011/30011/40011 accordingly.
+**Note:**  
+- Replace `dpi.*` and `dpi.<all_non_aggregated_columns>` with the actual columns from `dim_payment_identifier` you want to select and group by.  
+- If no columns from `dim_payment_identifier` are needed in the select list, you can omit `dpi.*` and also remove non-key columns from GROUP BY.  
+- The LEFT JOIN includes `dim_payment_identifier` on `pymt_id` as requested.
