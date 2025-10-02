@@ -1,5 +1,3 @@
-Here is the corrected SQL script with the updated txn_type_id values and proper labeling as per your logic:
-
 ```sql
 SELECT 
     t.transaction_date,
@@ -20,14 +18,33 @@ SELECT
 
     -- Interest
     SUM(CASE WHEN t.txn_type_id = 40011 THEN t.amount ELSE 0 END) AS interest_amount,
-    COUNT(CASE WHEN t.txn_type_id = 40011 THEN 1 END) AS interest_count
+    COUNT(CASE WHEN t.txn_type_id = 40011 THEN 1 END) AS interest_count,
+
+    -- Test1: txn_type_id = 50011
+    SUM(CASE WHEN t.txn_type_id = 50011 THEN t.amount ELSE 0 END) AS test1_amount,
+    COUNT(CASE WHEN t.txn_type_id = 50011 THEN 1 END) AS test1_count,
+
+    -- Test2: txn_type_id = 60011
+    SUM(CASE WHEN t.txn_type_id = 60011 THEN t.amount ELSE 0 END) AS test2_amount,
+    COUNT(CASE WHEN t.txn_type_id = 60011 THEN 1 END) AS test2_count,
+
+    -- Test3: txn_type_id = 70011
+    SUM(CASE WHEN t.txn_type_id = 70011 THEN t.amount ELSE 0 END) AS test3_amount,
+    COUNT(CASE WHEN t.txn_type_id = 70011 THEN 1 END) AS test3_count,
+
+    -- Test4: txn_type_id = 80011
+    SUM(CASE WHEN t.txn_type_id = 80011 THEN t.amount ELSE 0 END) AS test4_amount,
+    COUNT(CASE WHEN t.txn_type_id = 80011 THEN 1 END) AS test4_count
 
 FROM 
     fct_transactions t
 JOIN 
     dim_account a ON t.account_id = a.account_id
+
+-- Added LEFT JOIN to dim_payment_identifier using pymt_id column
+LEFT JOIN 
+    dim_payment_identifier pi ON t.pymt_id = pi.pymt_id
+
 GROUP BY 
     t.transaction_date;
 ```
-
-This modification updates txn_type_id filters from 1001/2001/3001/4001 to 10011/20011/30011/40011 accordingly.
