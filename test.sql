@@ -1,10 +1,9 @@
 SELECT 
-    t.transaction_id,
     t.transaction_date,
-    t.amount,
-    a.account_id,
-    a.account_name
+    sum( t.amount) as total_amount,
+    count( t.transaction_id)    as transaction_count
 FROM 
     fct_transactions t
 JOIN 
-    dim_account a ON t.account_id = a.account_id;
+    dim_account a ON t.account_id = a.account_id
+GROUP BY 1;
