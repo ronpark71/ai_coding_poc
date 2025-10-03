@@ -49,6 +49,10 @@ LEFT JOIN
 JOIN
     dim_product p ON a.product_id = p.product_id
 
+-- Added JOIN to dim_brand from dim_product using brand_id column
+JOIN
+    dim_brand b ON p.brand_id = b.brand_id
+
 GROUP BY 
     t.transaction_date;
 ```
