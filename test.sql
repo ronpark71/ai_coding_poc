@@ -45,6 +45,10 @@ JOIN
 LEFT JOIN 
     dim_payment_identifier pi ON t.pymt_id = pi.pymt_id
 
+-- Added JOIN to dim_product from dim_account using product_id column
+JOIN
+    dim_product p ON a.product_id = p.product_id
+
 GROUP BY 
     t.transaction_date;
 ```
